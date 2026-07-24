@@ -8,19 +8,14 @@
     :root {
       --forest: #1f351c;
       --forest-deep: #10230f;
-      --leaf: #6f8b4b;
       --moss: #415d2f;
       --hay: #d8aa35;
       --hay-soft: #f2d486;
       --cream: #fff8e8;
-      --paper: #f7ecd5;
-      --earth: #76533a;
-      --clay: #a86c43;
       --ink: #2d2a21;
       --muted: #786d5e;
       --line: rgba(88, 66, 38, .18);
       --shadow: 0 20px 70px rgba(65, 43, 19, .16);
-      --radius: 28px;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -66,8 +61,6 @@
     .section.tight { padding: 64px 0; }
     .section-head { display: grid; grid-template-columns: 1fr .8fr; gap: 34px; align-items: end; margin-bottom: 34px; }
     .section-head p { color: var(--muted); font-size: 1.04rem; }
-    .soft-panel { background: rgba(255,248,232,.74); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: var(--radius); }
-
     .topbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 30;
       transition: background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
@@ -88,8 +81,6 @@
     .links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
     .links a { text-decoration: none; font-weight: 800; font-size: .92rem; padding: 10px 12px; border-radius: 999px; }
     .links a:hover { background: rgba(216,170,53,.22); }
-    .links .admin-pill { border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.1); }
-    .topbar.scrolled .links .admin-pill { border-color: rgba(31,53,28,.16); background: rgba(31,53,28,.07); }
 
     .hero-screen {
       min-height: 100svh;
@@ -171,14 +162,6 @@
       font-size: .84rem;
       box-shadow: 0 10px 24px rgba(0,0,0,.16);
     }
-    .hero-photo.tall,
-    .hero-photo.wide {
-      min-height: 0;
-      grid-column: auto;
-      aspect-ratio: 1 / 1;
-    }
-
-
     .hero-content {
       position: relative;
       z-index: 1;
@@ -213,8 +196,6 @@
     .btn:hover { transform: translateY(-2px); }
     .btn.primary { background: var(--hay); color: #1e210e; box-shadow: 0 16px 34px rgba(216,170,53,.25); }
     .btn.secondary { color: var(--cream); border: 1px solid rgba(255,248,232,.32); background: rgba(255,255,255,.08); }
-    .btn.dark { background: var(--forest); color: var(--cream); }
-    .btn.light { background: #fff; color: var(--forest); border: 1px solid var(--line); }
     .hero-proof {
       position: relative;
       z-index: 1;
@@ -245,9 +226,9 @@
     }
 
     .intro-strip {
-      margin-top: -6px;
       position: relative;
       z-index: 5;
+      padding-top: 48px;
       padding-bottom: 10px;
     }
     .intro-grid {
@@ -343,27 +324,6 @@
     .animal-note { color: var(--muted); font-size:.94rem; }
     .empty { padding:30px; text-align:center; color:var(--muted); grid-column:1/-1; }
 
-    .admin-preview { background: linear-gradient(180deg, rgba(216,170,53,.12), rgba(255,248,232,0)); }
-    .admin-shell { display:grid; grid-template-columns: .85fr 1.15fr; gap:20px; align-items:start; }
-    .form-card, .table-card, .build-card { background:#fffdf5; border:1px solid var(--line); border-radius:28px; padding:22px; box-shadow:0 12px 34px rgba(65,43,19,.08); }
-    label { display:block; font-weight:850; color:var(--forest); margin-bottom:7px; }
-    input, select, textarea { width:100%; border:1px solid var(--line); background:#fff; border-radius:16px; padding:12px 13px; font:inherit; outline:none; }
-    textarea { min-height:86px; resize:vertical; }
-    .field-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    .field { margin-bottom:12px; }
-    .form-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .mini-note { color:var(--muted); font-size:.9rem; margin-top:12px; }
-    table { width:100%; border-collapse:separate; border-spacing:0 8px; }
-    th { text-align:left; font-size:.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; padding:0 10px; }
-    td { background:#fff; border-top:1px solid rgba(88,66,38,.12); border-bottom:1px solid rgba(88,66,38,.12); padding:10px; vertical-align:middle; font-size:.92rem; }
-    td:first-child { border-left:1px solid rgba(88,66,38,.12); border-radius:14px 0 0 14px; }
-    td:last-child { border-right:1px solid rgba(88,66,38,.12); border-radius:0 14px 14px 0; }
-    .thumb { width:54px; height:44px; object-fit:cover; border-radius:10px; display:block; }
-    .delete-btn { border:0; border-radius:999px; background:rgba(168,108,67,.16); color:#704425; font-weight:900; padding:8px 10px; cursor:pointer; }
-    .build-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:16px; }
-    .build-card strong { display:block; color:var(--forest); margin-bottom:5px; }
-    .build-card span { color:var(--muted); font-size:.94rem; }
-
     .gallery { display:grid; grid-template-columns: 1.2fr .8fr .8fr; gap:14px; }
     .gallery img { width:100%; height:100%; object-fit:cover; display:block; border-radius:26px; min-height:220px; box-shadow:0 12px 34px rgba(65,43,19,.08); }
     .gallery .tall { grid-row: span 2; min-height:470px; }
@@ -386,9 +346,9 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .section-head, .intro-grid, .care-wrap, .admin-shell, .footer-grid { grid-template-columns: 1fr; }
+      .section-head, .intro-grid, .care-wrap, .footer-grid { grid-template-columns: 1fr; }
       .raise-grid, .stock-grid { grid-template-columns: repeat(2, 1fr); }
-      .premium-grid, .process-grid, .build-grid { grid-template-columns: repeat(2, 1fr); }
+      .premium-grid, .process-grid { grid-template-columns: repeat(2, 1fr); }
       .hero-proof { grid-template-columns: repeat(2, 1fr); }
       .care-photo { min-height:460px; }
       .gallery { grid-template-columns: 1fr 1fr; }
@@ -408,62 +368,11 @@
       .hero-screen { padding-top: 100px; }
       h1 { font-size: clamp(2.6rem, 13vw, 4.2rem); }
       .section { padding: 68px 0; }
-      .raise-grid, .stock-grid, .premium-grid, .process-grid, .build-grid, .hero-proof, .field-grid, .gallery { grid-template-columns: 1fr; }
+      .raise-grid, .stock-grid, .premium-grid, .process-grid, .hero-proof, .gallery { grid-template-columns: 1fr; }
       .animal-meta { grid-template-columns: 1fr; }
       .stock-controls { align-items:stretch; }
       .search { flex-basis:100%; }
     }
-  
-    .hidden { display: none !important; }
-    .auth-card {
-      max-width: 560px;
-      margin: 0 auto 24px;
-      padding: 26px;
-      border-radius: 22px;
-      background: #fff;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(31,53,28,.10);
-    }
-    .auth-card h3 { margin-bottom: 8px; }
-    .auth-message {
-      min-height: 22px;
-      margin-top: 12px;
-      color: #8b2d2d;
-      font-weight: 700;
-      font-size: .92rem;
-    }
-    .admin-userbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(31,53,28,.07);
-    }
-    .admin-userbar span { color: var(--muted); font-weight: 700; }
-    .table-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-    .small-action {
-      border: 0;
-      border-radius: 999px;
-      padding: 8px 11px;
-      font-weight: 800;
-      cursor: pointer;
-      background: rgba(31,53,28,.10);
-      color: var(--green);
-    }
-    .small-action.danger {
-      background: rgba(146,50,43,.10);
-      color: #8b2d2d;
-    }
-    .save-message {
-      min-height: 22px;
-      margin-top: 10px;
-      font-weight: 700;
-      color: var(--green);
-    }
-
 
     .farm-gallery-heading {
       margin-bottom: 28px;
@@ -487,7 +396,6 @@
         <a href="#care">Animal Care</a>
         <a href="#premium">Why Premium</a>
         <a href="#herd">Our Herd</a>
-        
       </nav>
     </div>
   </header>
