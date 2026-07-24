@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ViRusaJaya | Admin</title>
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <style>
+    body { background: linear-gradient(180deg, #fff8e8 0%, #f8ead1 45%, #fff8e8 100%); }
+    .admin-topbar {
+      background: var(--forest-deep);
+      color: var(--cream);
+      padding: 16px 0;
+    }
+    .admin-topbar .nav { padding: 0; }
+    .admin-main { padding: 140px 0 80px; min-height: 100vh; }
+
+    .login-wrap {
+      max-width: 420px;
+      margin: 60px auto 0;
+      background: #fffdf5;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 36px;
+    }
+    .login-wrap h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    .login-wrap p.sub { color: var(--muted); margin-bottom: 24px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-weight: 800; color: var(--forest); margin-bottom: 6px; font-size: .92rem; }
+    .field input, .field select, .field textarea {
+      width: 100%; border: 1px solid var(--line); background: #fff;
+      border-radius: 14px; padding: 11px 13px; font: inherit; outline: none;
+    }
+    .field textarea { min-height: 80px; resize: vertical; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-msg { min-height: 20px; margin-top: 10px; font-weight: 700; font-size: .9rem; }
+    .form-msg.error { color: #8b2d2d; }
+    .form-msg.success { color: #1f5b30; }
+
+    .dashboard-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .dashboard-head h1 { font-size: 2rem; }
+
+    .admin-table-wrap {
+      background: #fffdf5; border: 1px solid var(--line); border-radius: 28px;
+      box-shadow: var(--shadow); padding: 20px; overflow-x: auto;
+    }
+    .admin-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; min-width: 760px; }
+    .admin-table th { text-align: left; font-size: .76rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 0 12px; }
+    .admin-table td { background: #fff; border-top: 1px solid rgba(88,66,38,.12); border-bottom: 1px solid rgba(88,66,38,.12); padding: 12px; vertical-align: middle; font-size: .92rem; }
+    .admin-table td:first-child { border-left: 1px solid rgba(88,66,38,.12); border-radius: 14px 0 0 14px; }
+    .admin-table td:last-child { border-right: 1px solid rgba(88,66,38,.12); border-radius: 0 14px 14px 0; }
+    .admin-thumb { width: 56px; height: 46px; object-fit: cover; border-radius: 10px; display: block; background: #e8dcc4; }
+    .row-actions { display: flex; gap: 8px; }
+    .row-btn {
+      border: 0; border-radius: 999px; padding: 8px 12px; font-weight: 800;
+      font-size: .82rem; cursor: pointer;
+    }
+    .row-btn.edit { background: rgba(31,53,28,.10); color: var(--forest); }
+    .row-btn.delete { background: rgba(146,50,43,.10); color: #8b2d2d; }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(16,35,15,.55);
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 60px 20px; overflow-y: auto; z-index: 50;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #fffdf5; border-radius: 28px; box-shadow: var(--shadow);
+      padding: 32px; width: min(640px, 100%);
+    }
+    .modal-card h2 { font-size: 1.5rem; margin-bottom: 20px; }
+    .image-upload-row { display: flex; gap: 16px; align-items: center; }
+    .image-preview {
+      width: 100px; height: 80px; border-radius: 14px; object-fit: cover;
+      background: var(--cream); border: 1px solid var(--line); flex: none;
+    }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+    .hidden { display: none !important; }
+    .empty-row td { text-align: center; color: var(--muted); padding: 30px; }
+  </style>
+</head>
+<body>
+  <header class="admin-topbar">
+    <div class="wrap nav">
+      <a class="brand" href="index.html" aria-label="ViRusaJaya home">
+        <img src="assets/img/logo.webp" alt="ViRusaJaya logo" />
+        <span>ViRusaJaya<small>Admin</small></span>
+      </a>
+      <button class="btn secondary hidden" id="logoutBtn" type="button">Log out</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="wrap">
+
+      <section id="loginView">
+        <div class="login-wrap">
+          <h1>Admin sign in</h1>
+          <p class="sub">Sign in to manage livestock listings.</p>
+          <form id="loginForm">
+            <div class="field">
+              <label for="loginEmail">Email</label>
+              <input id="loginEmail" type="email" autocomplete="username" required />
+            </div>
+            <div class="field">
+              <label for="loginPassword">Password</label>
+              <input id="loginPassword" type="password" autocomplete="current-password" required />
+            </div>
+            <button class="btn primary" type="submit" style="width:100%">Sign in</button>
+            <div class="form-msg error" id="loginMsg"></div>
+          </form>
+        </div>
+      </section>
+
+      <section id="dashboardView" class="hidden">
+        <div class="dashboard-head">
+          <h1>Manage stock</h1>
+          <button class="btn primary" id="addAnimalBtn" type="button">+ Add animal</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Breed</th>
+                <th>Status</th>
+                <th>Age</th>
+                <th>Weight</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="stockTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <h2 id="modalTitle">Add animal</h2>
+      <form id="animalForm">
+        <div class="field-row">
+          <div class="field">
+            <label for="fieldCode">Code</label>
+            <input id="fieldCode" required placeholder="G-004" />
+          </div>
+          <div class="field">
+            <label for="fieldName">Name</label>
+            <input id="fieldName" required placeholder="Goat 4" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fieldType">Type</label>
+            <select id="fieldType" required>
+              <option value="goat">Goat</option>
+              <option value="deer">Deer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fieldBreed">Breed</label>
+            <input id="fieldBreed" placeholder="Boer Cross" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fieldStatus">Status</label>
+            <select id="fieldStatus" required>
+              <option value="available">Available</option>
+              <option value="taken">Taken</option>
+              <option value="sold">Sold</option>
+              <option value="reserved">Reserved</option>
+              <option value="growing">Growing</option>
+              <option value="retained">Retained</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fieldAge">Age (months)</label>
+            <input id="fieldAge" type="number" min="0" placeholder="8" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="fieldWeight">Weight (kg)</label>
+          <input id="fieldWeight" type="number" min="0" step="0.1" placeholder="32" />
+        </div>
+        <div class="field">
+          <label for="fieldImage">Photo</label>
+          <div class="image-upload-row">
+            <img id="imagePreview" class="image-preview" alt="Preview" />
+            <input id="fieldImage" type="file" accept="image/*" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="fieldNote">Note</label>
+          <textarea id="fieldNote" placeholder="Healthy livestock raised under ViRusaJaya farm care."></textarea>
+        </div>
+        <div class="form-msg" id="formMsg"></div>
+        <div class="modal-actions">
+          <button class="btn secondary" type="button" id="cancelModalBtn" style="color:var(--forest);border-color:var(--line);background:#fff;">Cancel</button>
+          <button class="btn primary" type="submit" id="saveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase } from "./supabaseClient.js";
+
+    const loginView = document.getElementById("loginView");
+    const dashboardView = document.getElementById("dashboardView");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginForm = document.getElementById("loginForm");
+    const loginMsg = document.getElementById("loginMsg");
+    const stockTableBody = document.getElementById("stockTableBody");
+    const addAnimalBtn = document.getElementById("addAnimalBtn");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const modalTitle = document.getElementById("modalTitle");
+    const animalForm = document.getElementById("animalForm");
+    const cancelModalBtn = document.getElementById("cancelModalBtn");
+    const formMsg = document.getElementById("formMsg");
+    const imageInput = document.getElementById("fieldImage");
+    const imagePreview = document.getElementById("imagePreview");
+    const saveBtn = document.getElementById("saveBtn");
+
+    const BUCKET = "livestock-images";
+    let editingId = null;
+    let existingImageUrl = "";
+    let stockRows = [];
+
+    function escapeHtml(input) {
+      return String(input ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function setView(session) {
+      if (session) {
+        loginView.classList.add("hidden");
+        dashboardView.classList.remove("hidden");
+        logoutBtn.classList.remove("hidden");
+        loadStock();
+      } else {
+        loginView.classList.remove("hidden");
+        dashboardView.classList.add("hidden");
+        logoutBtn.classList.add("hidden");
+      }
+    }
+
+    supabase.auth.getSession().then(({ data }) => setView(data.session));
+    supabase.auth.onAuthStateChange((_event, session) => setView(session));
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      loginMsg.textContent = "";
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        loginMsg.textContent = error.message;
+      } else {
+        loginForm.reset();
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => supabase.auth.signOut());
+
+    async function loadStock() {
+      const { data, error } = await supabase
+        .from("livestock")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        stockTableBody.innerHTML = `<tr class="empty-row"><td colspan="9">Unable to load stock: ${escapeHtml(error.message)}</td></tr>`;
+        return;
+      }
+
+      stockRows = data || [];
+      renderTable();
+    }
+
+    function renderTable() {
+      if (!stockRows.length) {
+        stockTableBody.innerHTML = `<tr class="empty-row"><td colspan="9">No animals yet. Click "Add animal" to create your first listing.</td></tr>`;
+        return;
+      }
+
+      stockTableBody.innerHTML = stockRows.map(item => `
+        <tr>
+          <td><img class="admin-thumb" src="${escapeHtml(item.image_url || '')}" alt="" /></td>
+          <td>${escapeHtml(item.code)}</td>
+          <td>${escapeHtml(item.name)}</td>
+          <td style="text-transform:capitalize;">${escapeHtml(item.type)}</td>
+          <td>${escapeHtml(item.breed || "—")}</td>
+          <td style="text-transform:capitalize;">${escapeHtml(item.status)}</td>
+          <td>${item.age_months ? escapeHtml(item.age_months) + " mo" : "—"}</td>
+          <td>${item.weight_kg ? escapeHtml(item.weight_kg) + " kg" : "—"}</td>
+          <td>
+            <div class="row-actions">
+              <button class="row-btn edit" data-id="${item.id}" type="button">Edit</button>
+              <button class="row-btn delete" data-id="${item.id}" type="button">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      stockTableBody.querySelectorAll(".row-btn.edit").forEach(btn => {
+        btn.addEventListener("click", () => openModal(stockRows.find(r => r.id === btn.dataset.id)));
+      });
+      stockTableBody.querySelectorAll(".row-btn.delete").forEach(btn => {
+        btn.addEventListener("click", () => deleteAnimal(btn.dataset.id));
+      });
+    }
+
+    function openModal(item) {
+      formMsg.textContent = "";
+      formMsg.className = "form-msg";
+      animalForm.reset();
+      imageInput.value = "";
+
+      if (item) {
+        editingId = item.id;
+        existingImageUrl = item.image_url || "";
+        modalTitle.textContent = `Edit ${item.name}`;
+        document.getElementById("fieldCode").value = item.code || "";
+        document.getElementById("fieldName").value = item.name || "";
+        document.getElementById("fieldType").value = item.type || "goat";
+        document.getElementById("fieldBreed").value = item.breed || "";
+        document.getElementById("fieldStatus").value = item.status || "available";
+        document.getElementById("fieldAge").value = item.age_months || "";
+        document.getElementById("fieldWeight").value = item.weight_kg || "";
+        document.getElementById("fieldNote").value = item.note || "";
+        imagePreview.src = existingImageUrl;
+      } else {
+        editingId = null;
+        existingImageUrl = "";
+        modalTitle.textContent = "Add animal";
+        imagePreview.src = "";
+      }
+
+      modalOverlay.classList.add("open");
+    }
+
+    function closeModal() {
+      modalOverlay.classList.remove("open");
+    }
+
+    addAnimalBtn.addEventListener("click", () => openModal(null));
+    cancelModalBtn.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", (event) => {
+      if (event.target === modalOverlay) closeModal();
+    });
+
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files?.[0];
+      if (file) imagePreview.src = URL.createObjectURL(file);
+    });
+
+    async function uploadImage(file) {
+      const ext = file.name.split(".").pop();
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from(BUCKET).upload(path, file);
+      if (error) throw error;
+      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    animalForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      formMsg.textContent = "";
+      formMsg.className = "form-msg";
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving…";
+
+      try {
+        let imageUrl = existingImageUrl;
+        const file = imageInput.files?.[0];
+        if (file) {
+          imageUrl = await uploadImage(file);
+        }
+
+        const payload = {
+          code: document.getElementById("fieldCode").value.trim(),
+          name: document.getElementById("fieldName").value.trim(),
+          type: document.getElementById("fieldType").value,
+          breed: document.getElementById("fieldBreed").value.trim(),
+          status: document.getElementById("fieldStatus").value,
+          age_months: document.getElementById("fieldAge").value ? Number(document.getElementById("fieldAge").value) : null,
+          weight_kg: document.getElementById("fieldWeight").value ? Number(document.getElementById("fieldWeight").value) : null,
+          image_url: imageUrl,
+          note: document.getElementById("fieldNote").value.trim()
+        };
+
+        const { error } = editingId
+          ? await supabase.from("livestock").update(payload).eq("id", editingId)
+          : await supabase.from("livestock").insert(payload);
+
+        if (error) throw error;
+
+        await loadStock();
+        closeModal();
+      } catch (error) {
+        formMsg.textContent = error.message || "Something went wrong. Please try again.";
+        formMsg.className = "form-msg error";
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save";
+      }
+    });
+
+    async function deleteAnimal(id) {
+      if (!confirm("Delete this animal? This cannot be undone.")) return;
+      const { error } = await supabase.from("livestock").delete().eq("id", id);
+      if (error) {
+        alert(`Failed to delete: ${error.message}`);
+        return;
+      }
+      await loadStock();
+    }
+  </script>
+</body>
+</html>
