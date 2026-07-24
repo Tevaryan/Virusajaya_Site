@@ -302,7 +302,7 @@
 
       stockTableBody.innerHTML = stockRows.map(item => `
         <tr>
-          <td><img class="admin-thumb" src="${escapeHtml(item.image_url || '')}" alt="" /></td>
+          <td>${item.image_url ? `<img class="admin-thumb" src="${escapeHtml(item.image_url)}" alt="" />` : `<div class="admin-thumb"></div>`}</td>
           <td>${escapeHtml(item.code)}</td>
           <td>${escapeHtml(item.name)}</td>
           <td style="text-transform:capitalize;">${escapeHtml(item.type)}</td>
@@ -345,12 +345,16 @@
         document.getElementById("fieldAge").value = item.age_months || "";
         document.getElementById("fieldWeight").value = item.weight_kg || "";
         document.getElementById("fieldNote").value = item.note || "";
-        imagePreview.src = existingImageUrl;
+        if (existingImageUrl) {
+          imagePreview.src = existingImageUrl;
+        } else {
+          imagePreview.removeAttribute("src");
+        }
       } else {
         editingId = null;
         existingImageUrl = "";
         modalTitle.textContent = "Add animal";
-        imagePreview.src = "";
+        imagePreview.removeAttribute("src");
       }
 
       modalOverlay.classList.add("open");

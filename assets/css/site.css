@@ -74,6 +74,8 @@
     .links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
     .links a { text-decoration: none; font-weight: 800; font-size: .92rem; padding: 10px 12px; border-radius: 999px; }
     .links a:hover { background: rgba(216,170,53,.22); }
+    .links .admin-link { border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.1); margin-left: 4px; }
+    .topbar.scrolled .links .admin-link { border-color: rgba(31,53,28,.16); background: rgba(31,53,28,.07); }
 
     .hero-screen {
       min-height: 100svh;
